@@ -2,15 +2,9 @@ package com.example.FilmingLacationsAPI;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-
-// JPA Entity
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 
 
 // Controller
@@ -34,10 +28,15 @@ public class LocationController {
         return repository.findAll();
     }
 
+    @GetMapping("/location/{id}")
+    public ApiPayload getLocationById(@PathVariable String id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Location not found with id: " + id));
+    }
+
 
     @PostMapping("/location")
     public ApiPayload create(@RequestBody ApiPayload payload) {
         return repository.save(payload);
     }
 }
-///test
