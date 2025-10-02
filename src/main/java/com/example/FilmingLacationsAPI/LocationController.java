@@ -39,4 +39,14 @@ public class LocationController {
     public ApiPayload create(@RequestBody ApiPayload payload) {
         return repository.save(payload);
     }
+
+    @DeleteMapping("/location/{id}")
+    public Map<String, String> deleteLocationById(@PathVariable String id) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Location not found with id: " + id);
+        }
+        repository.deleteById(id);
+        return Map.of("message", "Location deleted with id: " + id);
+    }
+
 }
