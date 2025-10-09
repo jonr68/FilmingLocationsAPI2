@@ -48,6 +48,6 @@ public class LocationController {
         repository.deleteById(id);
         return Map.of("message", "Location deleted with id: " + id);
     }
-    //trying to fix master branch
+    //trying to fix master branch with new branch
 
 }
