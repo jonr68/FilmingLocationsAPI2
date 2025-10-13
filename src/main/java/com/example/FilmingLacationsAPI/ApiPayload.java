@@ -1,8 +1,7 @@
 package com.example.FilmingLacationsAPI;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
@@ -14,7 +13,9 @@ public class ApiPayload {
     private String username;
     private String latLong;
     private String address;
-    private String image;
+//    @Lob
+    @Column(name = "image", columnDefinition = "BLOB")
+    private byte[] image;
     private String description;
     private String tag;
 
@@ -61,11 +62,11 @@ public class ApiPayload {
         this.address = address;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 
