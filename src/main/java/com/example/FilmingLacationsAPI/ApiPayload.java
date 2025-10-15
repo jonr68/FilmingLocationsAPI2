@@ -1,6 +1,5 @@
 package com.example.FilmingLacationsAPI;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -13,7 +12,6 @@ public class ApiPayload {
     private String username;
     private String latLong;
     private String address;
-//    @Lob
     @Column(name = "image", columnDefinition = "BLOB")
     private byte[] image;
     private String description;

@@ -73,8 +73,8 @@ public class LocationController {
             @RequestParam("username") String username,
             @RequestParam("latLong") String latLong,
             @RequestParam("address") String address,
-            @RequestParam("image") MultipartFile imageFile,
             @RequestParam("description") String description,
+            @RequestParam("image") MultipartFile imageFile,
             @RequestParam("tag") String tag) throws IOException {
 
         ApiPayload payload = new ApiPayload();
