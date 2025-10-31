@@ -1,5 +1,6 @@
 package com.example.FilmingLacationsAPI;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,28 +68,52 @@ public class LocationController {
         return Map.of("message", "Location deleted with id: " + id);
     }
 
-    //trying to fix master branch with new branch
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createEntry(
-            @RequestParam("username") String username,
-            @RequestParam("latLong") String latLong,
-            @RequestParam("address") String address,
-            @RequestParam("description") String description,
-            @RequestParam("image") MultipartFile imageFile,
-            @RequestParam("tag") String tag) throws IOException {
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "latLong", required = false) String latLong,
+            @RequestParam(value = "address", required = false) String address,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "image", required = false) MultipartFile imageFile,
+            @RequestParam(value = "tag", required = false) String tag) {
 
-        ApiPayload payload = new ApiPayload();
-        payload.setUsername(username);
-        payload.setLatLong(latLong);
-        payload.setAddress(address);
-        payload.setImage(imageFile.getBytes()); // Convert MultipartFile to byte[]
-        payload.setDescription(description);
-        payload.setTag(tag);
+        try {
+            if (username == null || username.trim().isEmpty()) {
+                return ResponseEntity.status(422).body(Map.of("error", "Username is required"));
+            }
+            if (latLong == null || latLong.trim().isEmpty()) {
+                return ResponseEntity.status(422).body(Map.of("error", "LatLong is required"));
+            }
+            if (address == null || address.trim().isEmpty()) {
+                return ResponseEntity.status(422).body(Map.of("error", "Address is required"));
+            }
+            if (description == null || description.trim().isEmpty()) {
+                return ResponseEntity.status(422).body(Map.of("error", "Description is required"));
+            }
+            if (tag == null || tag.trim().isEmpty()) {
+                return ResponseEntity.status(422).body(Map.of("error", "Tag is required"));
+            }
+            if (imageFile == null || imageFile.isEmpty()) {
+                return ResponseEntity.status(422).body(Map.of("error", "Image file is required"));
+            }
 
-        // Save to repository
-        repository.save(payload);
+            ApiPayload payload = new ApiPayload();
+            payload.setUsername(username);
+            payload.setLatLong(latLong);
+            payload.setAddress(address);
+            payload.setImage(imageFile.getBytes());
+            payload.setDescription(description);
+            payload.setTag(tag);
 
-        return ResponseEntity.ok(payload);
+            ApiPayload saved = repository.save(payload);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error", "Failed to process image: " + e.getMessage()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(422).body(Map.of("error", "Failed to create entry: " + e.getMessage()));
+        }
     }
-
 }

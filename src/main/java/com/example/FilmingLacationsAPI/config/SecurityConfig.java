@@ -13,12 +13,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/login/**", "/error", "/api/public/**").permitAll() // Allow public endpoints
-                        .anyRequest().authenticated() // Require authentication for all other requests
+                        .requestMatchers("/", "/login", "/error", "/locations/**", "/upload", "/location/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("/helloworld", true) // Redirect after successful login
+                        .defaultSuccessUrl("/locations", true)
+                        .failureUrl("/login?error=true")
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")
