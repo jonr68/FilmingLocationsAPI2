@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FilmingLacationsApiApplication {
+public class FilmingLocationsApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FilmingLacationsApiApplication.class, args);
+		SpringApplication.run(FilmingLocationsApiApplication.class, args);
 	}
 //fix
 }
