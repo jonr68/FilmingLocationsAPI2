@@ -6,13 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-
-// Controller
 @RestController
 public class LocationController {
     private final ApiPayloadRepository repository;
@@ -24,7 +23,6 @@ public class LocationController {
 
     @GetMapping("/location")
     public Map<String, String> index() {
-        // Implement or remove this method as needed
         return Map.of("message", "Location endpoint");
     }
 
@@ -36,23 +34,22 @@ public class LocationController {
     @GetMapping("/location/{id}")
     public ApiPayload getLocationById(@PathVariable String id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Location not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found with id: " + id));
     }
 
     @GetMapping("/location/{id}/image")
     public ResponseEntity<byte[]> getImage(@PathVariable String id) {
         ApiPayload payload = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Location not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found with id: " + id));
 
         if (payload.getImage() == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image not found for location id: " + id);
         }
 
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG) // or IMAGE_PNG
+                .contentType(MediaType.IMAGE_JPEG)
                 .body(payload.getImage());
     }
-
 
     @PostMapping("/location")
     public ApiPayload create(@RequestBody ApiPayload payload) {
@@ -62,7 +59,7 @@ public class LocationController {
     @DeleteMapping("/location/{id}")
     public Map<String, String> deleteLocationById(@PathVariable String id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Location not found with id: " + id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found with id: " + id);
         }
         repository.deleteById(id);
         return Map.of("message", "Location deleted with id: " + id);
