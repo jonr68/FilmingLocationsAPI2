@@ -67,7 +67,7 @@ public class LocationController {
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createEntry(
-            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "username", required = false) String userName,
             @RequestParam(value = "latLong", required = false) String latLong,
             @RequestParam(value = "address", required = false) String address,
             @RequestParam(value = "description", required = false) String description,
@@ -75,7 +75,7 @@ public class LocationController {
             @RequestParam(value = "tag", required = false) String tag) {
 
         try {
-            if (username == null || username.trim().isEmpty()) {
+            if (userName == null || userName.trim().isEmpty()) {
                 return ResponseEntity.status(422).body(Map.of("error", "Username is required"));
             }
             if (latLong == null || latLong.trim().isEmpty()) {
@@ -95,7 +95,7 @@ public class LocationController {
             }
 
             ApiPayload payload = new ApiPayload();
-            payload.setUsername(username);
+            payload.setUserName(userName);
             payload.setLatLong(latLong);
             payload.setAddress(address);
             payload.setImage(imageFile.getBytes());
