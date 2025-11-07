@@ -9,13 +9,14 @@ public class ApiPayload {
 
     @Id // Marks this field as the primary key
     private String id;
-    private String username;
+    private String userName;
+    private String locName;
     private String latLong;
     private String address;
-    @Column(name = "image", columnDefinition = "BLOB")
-    private byte[] image;
     private String description;
     private String tag;
+    @Column(name = "image", columnDefinition = "BLOB")
+    private byte[] image;
 
     public ApiPayload() {
     } // JPA requires a no-arg constructor
@@ -36,12 +37,20 @@ public class ApiPayload {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getLocName() {
+        return locName;
+    }
+
+    public void setLocName(String locName) {
+        this.locName = locName;
     }
 
     public String getLatLong() {
@@ -60,14 +69,6 @@ public class ApiPayload {
         this.address = address;
     }
 
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -82,5 +83,13 @@ public class ApiPayload {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }
