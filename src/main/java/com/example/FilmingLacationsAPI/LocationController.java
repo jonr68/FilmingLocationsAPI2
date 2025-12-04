@@ -55,9 +55,6 @@ public class LocationController {
     
     @GetMapping("/location/{id}/images")
     public ResponseEntity<List<Map<String, String>>> getImages(@PathVariable String id) {
-        ApiPayload payload = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found with id: " + id));
-        
         List<Image> images = imageRepository.findByLocationId(id);
         
         if (images.isEmpty()) {
@@ -73,7 +70,7 @@ public class LocationController {
     
     @GetMapping("/location/{locationId}/image/{imageId}")
     public ResponseEntity<byte[]> getImageById(@PathVariable String locationId, @PathVariable String imageId) {
-        Image image = imageRepository.findById(imageId)
+        Image image = imageRepository.findByIdWithLocation(imageId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Image not found with id: " + imageId));
         
         if (!image.getLocation().getId().equals(locationId)) {
@@ -190,7 +187,7 @@ public class LocationController {
     
     @DeleteMapping("/location/{locationId}/image/{imageId}")
     public ResponseEntity<?> deleteImage(@PathVariable String locationId, @PathVariable String imageId) {
-        Image image = imageRepository.findById(imageId)
+        Image image = imageRepository.findByIdWithLocation(imageId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Image not found with id: " + imageId));
         
         if (!image.getLocation().getId().equals(locationId)) {
