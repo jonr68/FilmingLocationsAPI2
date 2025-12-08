@@ -1,7 +1,10 @@
 package com.example.FilmingLacationsAPI;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity // Marks this class as a JPA entity (a table in the DB)
@@ -15,8 +18,10 @@ public class ApiPayload {
     private String address;
     private String description;
     private String tag;
-    @Column(name = "image", columnDefinition = "BLOB")
-    private byte[] image;
+    
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Image> images = new ArrayList<>();
 
     public ApiPayload() {
     } // JPA requires a no-arg constructor
@@ -85,11 +90,21 @@ public class ApiPayload {
         this.tag = tag;
     }
 
-    public byte[] getImage() {
-        return image;
+    public List<Image> getImages() {
+        return images;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+    
+    public void addImage(Image image) {
+        images.add(image);
+        image.setLocation(this);
+    }
+    
+    public void removeImage(Image image) {
+        images.remove(image);
+        image.setLocation(null);
     }
 }
